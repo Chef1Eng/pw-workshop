@@ -20,7 +20,7 @@ export class InventoryPage extends BasicPage {
 
     addProductToCart(productName: string): Promise<void> {
         //Next lines generates by copilot, but I love it
-        const dataTestId = productName.toLowerCase().replace(/\s+/g, '-');
+        const dataTestId = productName.toLowerCase().replaceAll(/\s+/g, '-');
         return this.page.locator(`[data-test="add-to-cart-${dataTestId}"]`).click();
     }
 
