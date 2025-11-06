@@ -8,7 +8,7 @@ import { CheckoutStep2 } from '../pageobjects/checkoutStep2';
 import { CheckoutComplete } from '../pageobjects/checkoutComplete';
 
 test.describe('Extend the shopping cart test with additional functionality', () => { 
-  test('successful login with random user and order AZ', async ({ page }) => {
+  test('successful checkout', async ({ page }) => {
     const validUsers = UserFactory.getRandomValidUser();
     const loginPage = new LoginPage(page, '/');
   
@@ -21,12 +21,10 @@ test.describe('Extend the shopping cart test with additional functionality', () 
     const inventoryPage = new InventoryPage(page);
 
     await inventoryPage.orderProductsAZ();
-    console.log(`Ordered products A-Z`);
+    await expect(inventoryPage.productSortActive).toHaveText('Name (A to Z)');
 
     const cartPage = new CartPage(page);
     
-    await loginPage.goto();
-    await loginPage.login('standard_user', 'secret_sauce');
     await inventoryPage.addProductToCartByNthProduct(0);
     await inventoryPage.addProductToCartByNthProduct(1);
     await inventoryPage.clickOnCartIcon();
@@ -36,16 +34,15 @@ test.describe('Extend the shopping cart test with additional functionality', () 
     console.log(`Proceeded to checkout step one`);
 
     const checkoutStep1 = new CheckoutStep1(page);
+
     await expect(checkoutStep1.titleCheckoutStep1).toHaveText('Checkout: Your Information');
-    console.log(`On checkout step one page`);
-    
-    await expect(page.locator('[data-test="title"]')).toHaveText('Checkout: Your Information');
-    checkoutStep1.fillCheckoutInformation('John', 'Doe', '1000');
+    await checkoutStep1.fillCheckoutInformation('John', 'Doe', '1000');
     await checkoutStep1.clickOnContinueButton();
     console.log(`Proceeded to checkout step two`);
     await expect(page).toHaveURL(/checkout-step-two.html/);
 
     const checkoutStep2 = new CheckoutStep2(page);
+
     await expect(checkoutStep2.titleCheckoutStep2).toHaveText('Checkout: Overview');
     console.log(`On checkout step two page`);
     checkoutStep2.clickOnFinishButton();

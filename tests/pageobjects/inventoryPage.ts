@@ -7,6 +7,7 @@ export class InventoryPage extends BasePage {
     readonly cartIcon : Locator;
     readonly cartIconBadge : Locator;
     readonly productSortContainer : Locator;
+    readonly productSortActive : Locator;
 
     constructor(page: Page) {
         super(page,'/inventory.html');
@@ -14,6 +15,7 @@ export class InventoryPage extends BasePage {
         this.cartIcon = this.page.locator('.shopping_cart_link');
         this.cartIconBadge = this.page.locator('[data-test="shopping-cart-badge"]');
         this.productSortContainer = this.page.locator('[data-test="product-sort-container"]');
+        this.productSortActive = this.page.locator('[data-test="active-option"]');
     }
 
     addProductToCartByNthProduct(nthNumber: number) {
