@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test';
+import {Page } from '@playwright/test';
 
-export class BasicPage {
+export abstract class BasePage {
     readonly page: Page;
     readonly url: string;
 
@@ -12,5 +12,4 @@ export class BasicPage {
     async goto() {
         await this.page.goto(this.url);
     }
-
 }
