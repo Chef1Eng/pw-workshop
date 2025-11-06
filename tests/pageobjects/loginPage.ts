@@ -9,10 +9,13 @@ export class LoginPage extends BasePage{
 
     constructor(page: Page, url: string) {
         super(page, '/');
-        this.usernameInput = this.page.locator('#user-name');
-        this.passwordInput = this.page.locator('#password');
-        this.loginButton = this.page.locator('#login-button');
-        this.errorMessage = this.page.locator('[data-test="error"]');
+        // ✅ BEST PRACTICE - Semantic locators
+        this.usernameInput = this.page.getByPlaceholder('Username');
+        this.passwordInput = this.page.getByPlaceholder('Password');
+        this.loginButton = this.page.getByRole('button', { name: 'Login' });
+        // ✅ BEST PRACTICE - Text-based semantic locator (since no alert role exists)
+        this.errorMessage = this.page.getByText(/Epic sadface/i);
+        // Alternative: this.errorMessage = this.page.getByTestId('error');
     }
 
     async login(username: string, password: string) {
