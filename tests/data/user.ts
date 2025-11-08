@@ -8,9 +8,9 @@ export interface User {
 export class UserFactory {
   private static readonly users: User[] = [
     { username: 'standard_user', password: 'secret_sauce', type: 'standard', canLogin: true },
-    { username: 'problem_user', password: 'secret_sauce', type: 'problem', canLogin: false },
-    { username: 'performance_glitch_user', password: 'secret_sauce', type: 'performance', canLogin: false },
-    { username: 'error_user', password: 'secret_sauce', type: 'error', canLogin: false },
+    { username: 'problem_user', password: 'secret_sauce', type: 'problem', canLogin: true },
+    { username: 'performance_glitch_user', password: 'secret_sauce', type: 'performance', canLogin: true },
+    { username: 'error_user', password: 'secret_sauce', type: 'error', canLogin: true },
     { username: 'visual_user', password: 'secret_sauce', type: 'visual', canLogin: true },
     { username: 'locked_out_user', password: 'secret_sauce', type: 'locked', canLogin: false }
   ];
@@ -38,5 +38,9 @@ export class UserFactory {
 
   static getAllUsers(): User[] {
     return this.users;
+  }
+
+  static getStandardUsers(): User[] {
+    return this.users.filter(user => user.type === 'standard');
   }
 }
