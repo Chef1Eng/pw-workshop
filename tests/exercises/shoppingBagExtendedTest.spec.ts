@@ -7,62 +7,111 @@ import { CheckoutStep1 } from '../pageobjects/checkoutStep1';
 import { CheckoutStep2 } from '../pageobjects/checkoutStep2';
 import { CheckoutComplete } from '../pageobjects/checkoutComplete';
 
-test.describe('Extend the shopping cart test with additional functionality', () => { 
-  test('successful checkout', async ({ page }) => {
-    const validUsers = UserFactory.getRandomValidUser();
-    const loginPage = new LoginPage(page, '/');
-  
+test.describe('Enhanced Shopping Cart Tests', () => {
 
-    await loginPage.goto();
-    await loginPage.login(validUsers.username, validUsers.password);
-    await expect(page).toHaveURL(/inventory.html/);
-    console.log(`Logged in with user: ${validUsers.username}`);
+  test.describe('Successful Login Tests', () => {
+    test('login with all valid users', async ({ page }) => {
+      const validUsers = UserFactory.getAllValidUsers();
 
-    const inventoryPage = new InventoryPage(page);
+      for (const user of validUsers) {
+        await test.step(`Login with ${user.username} (${user.type})`, async () => {
+          const loginPage = new LoginPage(page, '/');
 
-    await inventoryPage.orderProductsAZ();
-    await expect(inventoryPage.productSortActive).toHaveText('Name (A to Z)');
-
-    const cartPage = new CartPage(page);
-    
-    await inventoryPage.addProductToCartByNthProduct(0);
-    await inventoryPage.addProductToCartByNthProduct(1);
-    await inventoryPage.clickOnCartIcon();
-    await expect(cartPage.cartItems).toHaveCount(2);
-    await cartPage.checkoutButton.click();
-    await expect(page).toHaveURL(/checkout-step-one.html/);
-    console.log(`Proceeded to checkout step one`);
-
-    const checkoutStep1 = new CheckoutStep1(page);
-
-    await expect(checkoutStep1.titleCheckoutStep1).toHaveText('Checkout: Your Information');
-    await checkoutStep1.fillCheckoutInformation('John', 'Doe', '1000');
-    await checkoutStep1.clickOnContinueButton();
-    console.log(`Proceeded to checkout step two`);
-    await expect(page).toHaveURL(/checkout-step-two.html/);
-
-    const checkoutStep2 = new CheckoutStep2(page);
-
-    await expect(checkoutStep2.titleCheckoutStep2).toHaveText('Checkout: Overview');
-    console.log(`On checkout step two page`);
-    checkoutStep2.clickOnFinishButton();
-    await expect(page).toHaveURL(/checkout-complete.html/);
-    console.log(`Proceeded to checkout complete page`);
-
-    const checkoutComplete = new CheckoutComplete(page);
-    await expect(checkoutComplete.completeHeader).toHaveText('Thank you for your order!');
-    console.log(`Order completed successfully`);
+          await loginPage.goto();
+          await loginPage.login(user.username, user.password);
+          
+          // ✅ CLEAR EXPECTATION: All valid users should reach inventory
+          await expect(page).toHaveURL(/inventory.html/);
+          console.log(`✅ Successfully logged in with user: ${user.username} (${user.type})`);
+          
+          // Optional: Test user-specific behaviors that still result in success
+          if (user.type === 'problem') {
+            console.log(`ℹ️  Note: ${user.username} may have UI quirks but login succeeded`);
+          }
+          if (user.type === 'performance') {
+            console.log(`ℹ️  Note: ${user.username} may be slower but login succeeded`);
+          }
+        });
+      }
+    });
   });
 
-  test('Error login case locked user', async ({ page }) => {
-  const lockedUsers = UserFactory.getLockedOutUser();
-  const loginPage = new LoginPage(page, '/');
+  test.describe('Failed Login Tests', () => {
+    test('login with locked out user shows error', async ({ page }) => {
+      const lockedUser = UserFactory.getLockedOutUser();
+      const loginPage = new LoginPage(page, '/');
 
-  await loginPage.goto();
-  await loginPage.login(lockedUsers.username, lockedUsers.password);
-  const errorMessage = loginPage.errorMessage;
-  await expect(errorMessage).toContainText('Epic sadface: Sorry, this user has been locked out.');
-  console.log(`Logged in with user: ${lockedUsers.username}`);
+      await loginPage.goto();
+      await loginPage.login(lockedUser.username, lockedUser.password);
+      
+      // ✅ CLEAR EXPECTATION: Locked user should show error and stay on login page
+      await expect(loginPage.errorMessage).toBeVisible();
+      await expect(loginPage.errorMessage).toContainText('Epic sadface: Sorry, this user has been locked out.');
+      await expect(page).not.toHaveURL(/inventory.html/); // Should NOT reach inventory
+      console.log(`✅ Error correctly displayed for: ${lockedUser.username}`);
+    });
+
+    // Future: Add tests for other error scenarios
+    // test('login with invalid credentials shows error', async ({ page }) => { ... });
+    // test('login with empty fields shows validation error', async ({ page }) => { ... });
+  });
+
+  test.describe('Shopping Cart Workflow Tests', () => {
+
+    test('sort products and add items to cart', async ({ page }) => {
+      const validUser = UserFactory.getRandomValidUser();
+      const loginPage = new LoginPage(page, '/');
+      const inventoryPage = new InventoryPage(page);
+      const cartPage = new CartPage(page);
+
+      // Setup: Login
+      await loginPage.goto();
+      await loginPage.login(validUser.username, validUser.password);
+      
+      // Test: Sort and add items
+      await inventoryPage.orderProductsAZ();
+      await expect(inventoryPage.productSortActive).toHaveText('Name (A to Z)');
+      
+      await inventoryPage.addProductToCartByNthProduct(0);
+      await inventoryPage.addProductToCartByNthProduct(1);
+      await inventoryPage.clickOnCartIcon();
+      await expect(cartPage.cartItems).toHaveCount(2);
+      console.log(`✅ Successfully added 2 items to cart and sorted A-Z`);
+    });
+
+    test('complete checkout process', async ({ page }) => {
+      const validUser = UserFactory.getRandomValidUser();
+      const loginPage = new LoginPage(page, '/');
+      const inventoryPage = new InventoryPage(page);
+      const cartPage = new CartPage(page);
+      const checkoutStep1 = new CheckoutStep1(page);
+      const checkoutStep2 = new CheckoutStep2(page);
+      const checkoutComplete = new CheckoutComplete(page);
+
+      // Setup: Login and add items
+      await loginPage.goto();
+      await loginPage.login(validUser.username, validUser.password);
+      await inventoryPage.addProductToCartByNthProduct(0);
+      await inventoryPage.addProductToCartByNthProduct(1);
+      await inventoryPage.clickOnCartIcon();
+
+      // Test: Complete checkout
+      await cartPage.checkoutButton.click();
+      await expect(page).toHaveURL(/checkout-step-one.html/);
+
+      await expect(checkoutStep1.titleCheckoutStep1).toHaveText('Checkout: Your Information');
+      await checkoutStep1.fillCheckoutInformation('John', 'Doe', '1000');
+      await checkoutStep1.clickOnContinueButton();
+      await expect(page).toHaveURL(/checkout-step-two.html/);
+
+      await expect(checkoutStep2.titleCheckoutStep2).toHaveText('Checkout: Overview');
+      await checkoutStep2.clickOnFinishButton();
+      await expect(page).toHaveURL(/checkout-complete.html/);
+
+      await expect(checkoutComplete.completeHeader).toHaveText('Thank you for your order!');
+      console.log(`✅ Order completed successfully`);
+    });
 
   });
+
 });

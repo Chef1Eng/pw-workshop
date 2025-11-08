@@ -35,4 +35,8 @@ export class UserFactory {
   static getAllInvalidUsers(): User[] {
     return this.users.filter(user => !user.canLogin);
   }
+
+  static getAllUsers(): User[] {
+    return this.users;
+  }
 }
