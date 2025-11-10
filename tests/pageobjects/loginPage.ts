@@ -6,6 +6,7 @@ export class LoginPage extends BasePage{
     readonly passwordInput: Locator;
     readonly loginButton: Locator;
     readonly errorMessage: Locator;
+    readonly loginCredentials: Locator;
 
     constructor(page: Page, url: string) {
         super(page, '/');
@@ -16,6 +17,7 @@ export class LoginPage extends BasePage{
         // ✅ BEST PRACTICE - Text-based semantic locator (since no alert role exists)
         this.errorMessage = this.page.getByText(/Epic sadface/i);
         // Alternative: this.errorMessage = this.page.getByTestId('error');
+        this.loginCredentials = this.page.locator('div').filter({ hasText: 'Accepted usernames are:' }).nth(4);
     }
 
     async login(username: string, password: string) {

@@ -13,8 +13,13 @@ export default defineConfig({
     headless: false,
     ignoreHTTPSErrors: true,
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: 'on',
     video: 'retain-on-failure',
+  },
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixels: 5, // optional, super restricted
+    },
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },

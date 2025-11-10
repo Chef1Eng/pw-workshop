@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures/loginFixture';
 import { LoginPage } from '../pageobjects/loginPage';
 import { UserFactory } from '../data/user';
 import { InventoryPage } from '../pageobjects/inventoryPage';
@@ -113,5 +113,8 @@ test.describe('Enhanced Shopping Cart Tests', () => {
     });
 
   });
-
+    test('button UI should match baseline', async ({ loginPage }) => {
+    await loginPage.goto();
+    await expect(loginPage.loginCredentials).toHaveScreenshot('login-credentials-baseline.png');
+  });
 });
