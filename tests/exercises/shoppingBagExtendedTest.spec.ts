@@ -118,3 +118,29 @@ test.describe('Enhanced Shopping Cart Tests', () => {
     await expect(loginPage.loginCredentials).toHaveScreenshot('login-credentials-baseline.png');
   });
 });
+
+test.describe('Login Fixture', () => {
+
+    test('use authenticated page fixture', async ({ authenticatedPage }) => {
+      // Already logged in - start testing immediately
+      await expect(authenticatedPage.inventoryItems).toHaveCount(6);
+      await authenticatedPage.addProductToCartByNthProduct(0);
+      await expect(authenticatedPage.cartIconBadge).toHaveText('1');
+    });
+
+    test('use specific user type fixtures', async ({ authenticatedStandardUser }) => {
+      // Guaranteed standard user behavior
+      await authenticatedStandardUser.addProductToCartByName("Sauce Labs Backpack");
+      await expect(authenticatedStandardUser.cartIconBadge).toHaveText('1');
+      
+      await authenticatedStandardUser.clickOnCartIcon();
+      await expect(authenticatedStandardUser.page).toHaveURL(/cart\.html/);
+    });
+
+    test('use problem user fixture', async ({ authenticatedProblemUser }) => {
+      // Test with problem user - may have UI quirks but should function
+      await authenticatedProblemUser.addProductToCartByNthProduct(0);
+      await expect(authenticatedProblemUser.cartIconBadge).toHaveText('1');
+    });
+
+});

@@ -4,24 +4,16 @@
 
 The login fixture provides pre-authenticated states and helper functions to reduce test boilerplate and ensure consistent authentication across your Playwright tests.
 
-## Files Created
+## Files Structure
 
-- `tests/fixtures/loginFixture.ts` - Main fixture definitions and helper functions
-- `tests/examples/loginFixtureExamples.spec.ts` - Example usage (has one small TypeScript error to fix)
+- `tests/fixtures/loginFixture.ts` - Main fixture definitions
+- `tests/helpers/loginHelpers.ts` - Helper functions for login operations
+- `tests/examples/loginFixtureExamples.spec.ts` - Example usage
+- `tests/examples/loginFixtureExamples-corrected.spec.ts` - Corrected examples
 
-## Quick Fix Needed
+## Quick Fix Applied
 
-In the examples file, line 142 needs to be updated from:
-```typescript
-const validUsers = UserFactory.getAllValidUsers();
-```
-
-To:
-```typescript
-const validUsers = UserFactory.getAllValidUsers().filter(user => user.type !== 'locked');
-```
-
-This filters out the locked user since the LoginHelpers.loginWithUserType() function doesn't accept 'locked' as a valid type parameter.
+✅ **Best Practice Implemented**: Moved `LoginHelpers` class from fixtures to a dedicated helpers folder to maintain proper separation of concerns.
 
 ## Available Fixtures
 
@@ -66,7 +58,7 @@ test('example', async ({ authenticatedPerformanceUser }) => {
 ## Helper Functions
 
 ```typescript
-import { LoginHelpers } from '../fixtures/loginFixture';
+import { LoginHelpers } from '../helpers/loginHelpers';
 
 // Login with specific user type
 const inventoryPage = await LoginHelpers.loginWithUserType(page, 'standard');
@@ -80,6 +72,12 @@ const { loginPage, inventoryPage } = await LoginHelpers.loginWithCredentials(
 const loginPage = await LoginHelpers.attemptFailedLogin(
   page, 'locked_out_user', 'secret_sauce'
 );
+
+// Quick login with standard user (shortcut)
+const inventoryPage = await LoginHelpers.quickLogin(page);
+
+// Login with random user for variety
+const { user, inventoryPage } = await LoginHelpers.loginWithRandomUser(page);
 
 // Logout from authenticated state
 await LoginHelpers.logout(page);
@@ -148,14 +146,19 @@ test('locked user error', async ({ page }) => {
    import { test, expect } from '../fixtures/loginFixture';
    ```
 
-2. Use the fixtures in your tests:
+2. Import helpers when needed:
+   ```typescript
+   import { LoginHelpers } from '../helpers/loginHelpers';
+   ```
+
+3. Use the fixtures in your tests:
    ```typescript
    test('my test', async ({ authenticatedPage }) => {
      // Start testing immediately - already logged in!
    });
    ```
 
-3. For more control, use the helper functions:
+4. For more control, use the helper functions:
    ```typescript
-   import { LoginHelpers } from '../fixtures/loginFixture';
+   const inventoryPage = await LoginHelpers.quickLogin(page);
    ```

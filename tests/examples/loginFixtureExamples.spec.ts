@@ -1,4 +1,5 @@
-import { test, expect, LoginHelpers } from '../fixtures/loginFixture';
+import { test, expect } from '../fixtures/loginFixture';
+import { LoginHelpers } from '../helpers/loginHelpers';
 import { UserFactory } from '../data/user';
 
 /**
