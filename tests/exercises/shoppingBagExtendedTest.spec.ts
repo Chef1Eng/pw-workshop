@@ -1,11 +1,11 @@
 import { test, expect } from '../fixtures/loginFixture';
-import { LoginPage } from '../pageobjects/loginPage';
+import { LoginPage } from '../pages/loginPage';
 import { UserFactory } from '../data/user';
-import { InventoryPage } from '../pageobjects/inventoryPage';
-import { CartPage } from '../pageobjects/cartPage';
-import { CheckoutStep1 } from '../pageobjects/checkoutStep1';
-import { CheckoutStep2 } from '../pageobjects/checkoutStep2';
-import { CheckoutComplete } from '../pageobjects/checkoutComplete';
+import { InventoryPage } from '../pages/inventoryPage';
+import { CartPage } from '../pages/cartPage';
+import { CheckoutStep1 } from '../pages/checkoutStep1';
+import { CheckoutStep2 } from '../pages/checkoutStep2';
+import { CheckoutComplete } from '../pages/checkoutComplete';
 
 test.describe('Enhanced Shopping Cart Tests', () => {
 

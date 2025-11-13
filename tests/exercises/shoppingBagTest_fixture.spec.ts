@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures/loginFixture';
-import { CartPage } from '../pageobjects/cartPage';
+import { CartPage } from '../pages/cartPage';
 
 test.describe('Only Login Fixture By Edu', () => {
   test('addToCart', async ({ authenticatedStandardUser }) => {

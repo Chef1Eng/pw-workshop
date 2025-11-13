@@ -1,6 +1,6 @@
 import { test as base, expect } from '@playwright/test';
-import { LoginPage } from '../pageobjects/loginPage';
-import { InventoryPage } from '../pageobjects/inventoryPage';
+import { LoginPage } from '../pages/loginPage';
+import { InventoryPage } from '../pages/inventoryPage';
 import { UserFactory, User } from '../data/user';
 
 // Define fixture types

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pageobjects/loginPage';
-import { InventoryPage } from '../pageobjects/inventoryPage';
-import { CartPage } from '../pageobjects/cartPage';
+import { LoginPage } from '../pages/loginPage';
+import { InventoryPage } from '../pages/inventoryPage';
+import { CartPage } from '../pages/cartPage';
 
 test('addToCart', async ({ page }) => {
   const loginPage = new LoginPage(page, '/');
