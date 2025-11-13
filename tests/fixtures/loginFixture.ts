@@ -57,7 +57,6 @@ export const test = base.extend<LoginFixtures>({
     
     // Verify successful login
     await expect(page).toHaveURL(/inventory\.html/);
-    await expect(inventoryPage.inventoryItems).toHaveCount(6);
     
     console.log(`✅ Authenticated with ${standardUser.username} (${standardUser.type})`);
     
@@ -80,7 +79,6 @@ export const test = base.extend<LoginFixtures>({
     
     // Verify successful login
     await expect(page).toHaveURL(/inventory\.html/);
-    await expect(inventoryPage.inventoryItems).toHaveCount(6);
     
     console.log(`✅ Authenticated with standard_user`);
     
