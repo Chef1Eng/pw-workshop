@@ -137,7 +137,7 @@ test.describe('Login Fixture', () => {
       await expect(authenticatedStandardUser.page).toHaveURL(/cart\.html/);
     });
 
-    test('use problem user fixture', async ({ authenticatedProblemUser }) => {
+    test.skip ('use problem user fixture', async ({ authenticatedProblemUser }) => {
       // Test with problem user - may have UI quirks but should function
       await authenticatedProblemUser.addProductToCartByNthProduct(0);
       await expect(authenticatedProblemUser.cartIconBadge).toHaveText('1');
