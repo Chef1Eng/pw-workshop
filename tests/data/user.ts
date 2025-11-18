@@ -1,7 +1,9 @@
+export type UserType = 'standard' | 'problem' | 'performance' | 'error' | 'visual' | 'locked';
+
 export interface User {
   username: string;
   password: string;
-  type: 'standard' | 'problem' | 'performance' | 'error' | 'visual' | 'locked';
+  type: UserType;
   canLogin: boolean;
 }
 

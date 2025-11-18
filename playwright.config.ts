@@ -1,4 +1,13 @@
 import { defineConfig, devices } from '@playwright/test';
+import { config as dotenvConfig } from 'dotenv';
+
+const dotenvConfigResult = dotenvConfig();
+
+if (dotenvConfigResult.error) {
+  throw new Error(
+    `Please add .env file in the root of the project. Error: ${dotenvConfigResult.error}`
+  );
+}
 
 export default defineConfig({
   testDir: './tests',
@@ -8,7 +17,7 @@ export default defineConfig({
   workers: 4, 
   //shard: { total: 5, current: 2 }, // este es el shard 2 de 5
   use: {
-    baseURL: 'https://www.saucedemo.com/',
+    baseURL: process.env.URL,
     viewport: { width: 1280, height: 720 },
     headless: false,
     ignoreHTTPSErrors: true,

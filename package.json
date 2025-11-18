@@ -22,5 +22,8 @@
     "report": "playwright show-report",
     "lint": "eslint . --ext .ts",
     "format": "prettier -w ."
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
   }
 }
